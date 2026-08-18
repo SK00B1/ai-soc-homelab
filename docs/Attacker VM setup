@@ -1,0 +1,32 @@
+How I built ubuntu-attacker. Same base as the SOC-server 
+User account :  analyst
+
+Tools:      sudo apt update
+            sudo apt install -y \
+            nmap \
+            net-tools \
+            curl \
+            wget \
+            git \
+            python3 \
+            python3-pip \
+            netcat-openbsd \
+            tcpdump
+
+nmap is the main one. Port and service scanning, which is usually the first thing
+an attacker does and should be one of the first things a SIEM notices. 
+
+tcpdump is so I can capture what I'm actually sending. This matters because I want to compare
+the traffic I generated against what ended up in the logs. 
+If something I did doesnt show up anywhere, that gap is the interesting part. 
+
+netcat is for making simple raw TCP connections I can control precisely and curl
+and wget are for generating web traffic once the victim has something listening. 
+
+net-tools is old but netstat is stil convenient. python2 and pip are for automating scenarios
+later and for the alert parsin script. git so I can write notes from the VM itself. 
+
+MISTAKES: First time I ran that install I hit Enter after python3-pip instead of typing
+the backlash to continue the line. So it installed everything up to that point and stopped. 
+Nothing broke, I just ran the rest separately afterwards. 
+
