@@ -1,0 +1,74 @@
+Before installing a SIEM it's worth checking the machines can actually reach each other. 
+A Wazuh agent that cant talk to the manager just produces nothing, and if I hadnt tested 
+the network first I'd have ended up debugging Wazuh when the real problem was a layer underneath it.
+
+Addresses
+
+The SOC server is on 192.168.65.4 and the attacker is on 192.168.65.5. 
+Both use interface enp0s1. The victim doesn't exist yet.
+Both are on 192.168.65.0/24, which is a virtual network UTM creates on the host. 
+Addresses come from DHCP.
+
+The interface being called enp0s1 instead of eth0 is systemd's predictable naming. 
+The name gets derived from where the device sits on the bus, so it doesn't 
+shuffle around between reboots the way eth0 and eth1 used to.
+
+FINDING THEM:   [  ip a  ]
+
+On the SOC server: 2:     enp0s1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500
+                          inet 192.168.65.4/24 brd 192.168.65.255 scope global dynamic enp0s1
+
+
+Ubuntu Server also prints it in the login banner 
+so most of the time I don't need this command: [ IPv4 address for enp0s1: 192.168.65.4 ]
+
+Testing it:
+ping sends ICMP echo requests and waits for replies. 
+If replies come back the two machines can reach each other.
+
+I tested it both ways. One direction working doesn't tell you the other one does. 
+A firewall rule or NAT config can easily allow traffic one way and drop
+it the other, and Wazuh needs the agent to reach the manager specifically, 
+thereofre direction matters here.
+
+From the attacker: [  analyst@ubuntu-attacker:~$ ping 192.168.65.4  ]
+ output : 
+
+From the SOC server: [  socadmin@ubuntu-soc-server:~$ ping 192.168.65.5  ]
+ output: 
+
+What the output shows: 
+
+0% packet loss is the number that matters, and both directions came back clean.
+
+The ttl=64 is worth a mention. TTL starts at 64 on Linux and drops by one every router it passes through.
+It arrived at 64, so it went through zero routers, which means these two are on the same 
+network segment rather than being routed to each other. That's what I wanted.
+
+Times in the low single digit milliseconds are normal for two VMs on the same physical machine.
+
+Things that could have gone wrong: 
+
+If the two VMs had come back on different subnets, say one on 192.168.65.x and the other on 10.0.2.x, 
+they'd be on separate virtual networks and wouldn't reach each other without routing between them. 
+The fix is putting both on the same network mode in UTM.
+
+100% packet loss would mean either the target's off, they're on different networks,
+or something's dropping ICMP. Worth checking ufw status in that case, because a host firewall
+can block ping while still letting everything else through, so a failed ping doesn't always mean the network is broken.
+
+The addresses come from DHCP so they can change. If something that worked yesterday stops working, check ip a before assuming 
+anything's actually wrong.
+
+To do: 
+
+Find out whether UTM is using Shared or Bridged networking and note it here.
+
+Set static IPs before I configure any Wazuh agents, since agents get pointed at 
+a specific manager address and I don't want that moving.
+
+Add the victim and retest against both of these.
+
+Once Wazuh is up, confirm port 1514/tcp is actually reachable, 
+because ping working doesn't mean the agent port is open.
+
