@@ -1,0 +1,26 @@
+Things that went wrong and what I did them. I'm keeping this because the troubleshooting
+has taught me more that the parts that worked first time. 
+
+Kali wouldnt install on ARM64
+I downloaded kali-linux-2026.1-installer-arm64.iso, which is the correct architecture for an M-series Mac. 
+Both the graphical installer and the plain one died the same way. 
+The ISO being the right architecture is what made this annoyinh because thats the obvious thing to check and it wasnt the problem. 
+From what I could work out the error is about how the installer's kernel sees the Virtual hardware UTM is preseting it. 
+
+The decision I made was to stop. I'd already spent longer on it than the VM was worth, and the machine was never the interesting part of this project.
+Swapping to Ubuntu and installing the four or five tools 
+I actually needed took about ten minutes and unblocked everything.
+
+LOCKED OUT of both VMs: 
+I came back to this after a few months off and couldnt remember either password.
+Nothing in a password manager, nothing written down anywhere. 
+
+Trying GRUB first: 
+The normal way to fix this is catch the GRUB menu while it's booting, pick recovery mode, 
+and reset the password from the robot shell it gives you. I couldnt catch it. The timeout in this VM
+is very short, and holding Shift or Esc buttons just dropped me back to the firmware meny instead which is a layer below GRUB. 
+
+I booted from the instaler instead, booted the VM off an Ubuntu server ISO, got a shell in the live environment and mounted
+both the VMs real disk from outside it. 
+Then I could change the password on the actual installed system without ever booting it. 
+
