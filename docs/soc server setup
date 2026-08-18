@@ -1,0 +1,32 @@
+How I built ubuntu-soc-server (box that'll run Wazuh).
+
+Server edition not Desktop
+
+There's no GUI on it and there doesnt need to be. It runs services.
+Server uses less RAMM which matter when a few VMs are sharing one laptop, and it's closer
+to what a rel monitoring server looks like. 
+Everything is done in the terminal. 
+
+It's a QEMU 10.0 ARM VM in UTM with 2GB of RAM and a 32 GB virtual disk. 
+Kernel is 7.0.0-15-generic. User account is socadmin. 
+
+Choices during the install: 
+I enabled OPENSSH. Being able to SSH in from the MAC terminal is much better than working
+in the UTM console window, where copy and paste is awkward and the window size is fixed. 
+
+Packages after the install: 
+
+Updates: 
+
+(sudo apt update)   and  (sudo apt upgrade -y)
+
+(sudo apt install -y build-essential python3-dev python3-pip)
+
+I installed those because some Python packages need to compile parts of themselves
+when pip install them, and without the headers and a compiler present it fails with errors
+that dont point at the real problem. 
+
+Git was already on it and configured for this repo. 
+
+
+
