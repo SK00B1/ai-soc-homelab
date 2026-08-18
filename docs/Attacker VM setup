@@ -23,7 +23,7 @@ If something I did doesnt show up anywhere, that gap is the interesting part.
 netcat is for making simple raw TCP connections I can control precisely and curl
 and wget are for generating web traffic once the victim has something listening. 
 
-net-tools is old but netstat is stil convenient. python2 and pip are for automating scenarios
+net-tools is old but netstat is stil convenient. python3 and pip are for automating scenarios
 later and for the alert parsin script. git so I can write notes from the VM itself. 
 
 MISTAKES: First time I ran that install I hit Enter after python3-pip instead of typing
