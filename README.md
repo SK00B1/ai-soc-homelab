@@ -18,7 +18,7 @@ have something concrete I can explain in an interview
 Everything here runs on machines I own and control. It's a defensive lab.
 
 Where it's at now: 
-Two VMs exist and they can reach each other. No Wash yet so no victim machine. 
+Two VMs exist and they can reach each other. No Wazuh yet so no victim machine. 
 
 Done:
 -  Both VMs built and booting (Ubuntu Server LTS, ARM64, UTM)
@@ -27,7 +27,7 @@ Done:
 
 NOT Done :
 - Victim VM
-- Wash install and agents
+- Wazuh install and agents
 - Any actual attacks
 - Python alert parsing
 - AI part
